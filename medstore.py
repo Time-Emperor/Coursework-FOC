@@ -1,38 +1,47 @@
+# Here is the main Program for MedStore.
+from inventory import load_all_medicines, show_inventory
+from selling import process_customer_sale
+from buying import handle_supplier_restock
 
-# It creates an empty list to store medicines
-medicines = []
+def run_app():
+    # Here is the main menu loop of our program.
+    print("\n" + "*" * 40)
+    print(" Welcome to MedStore Wholesale System ")
+    print("*" * 40)
+    
+    # It loads the fresh data from text file every time we show the menu.
+    meds = load_all_medicines()
+    
+    app_running = True
+    while app_running:
+        
+        print("\n--- WHAT WOULD YOU LIKE TO DO? ---")
+        print(" 1) View all medicines in stock")
+        print(" 2) Sell medicine to a customer")
+        print(" 3) Buy/Restock from a supplier")
+        print(" 4) Quit the program")
+        print("----------------------------------")
+        
+        user_choice = input("Enter your choice (1-4): ").strip()
+        
+        if user_choice == '1':
+            show_inventory(meds)
+            
+        elif user_choice == '2':
+            print("\n>> STARTING A NEW SALE <<")
+            process_customer_sale(meds)
+            
+        elif user_choice == '3':
+            print("\n>> NEW SUPPLIER RESTOCK <<")
+            handle_supplier_restock(meds)
+            
+        elif user_choice == '4':
+            print("\nExiting the app. Thanks for using our Application!")
+            app_running = False
+            
+        else:
+            print("\ncha cha, that's not a valid choice.")
 
-# It opens the file and reads the data
-file = open("medicines.txt", "r")
-data = file.readlines()
-file.close()
-
-# It processes each line and stores it in dictionary format in the list "medicines".
-#  Each line is stripped of whitespace, split by commas, and the relevant details are
-#  stored in a dictionary with appropriate keys. The stock, price per tablet, price per
-#  strip, and tablets per strip are converted to integers for easier manipulation later on.
-for line in data:
-    line = line.strip() 
-    parts = line.split(",")
-    medicine = {
-        "name": parts[0],
-        "brand": parts[1],
-        "stock": int(parts[2]),
-        "price_tablet": int(parts[3]),
-        "price_strip": int(parts[4]),
-        "tablets_per_strip": int(parts[5])
-    }
-
-    medicines.append(medicine)
-
-# It displays all the details of medicines stored in the dictionary in a formatted manner.
-print("\n--- Available Medicines ---\n")
-
-for m in medicines:
-    print("Medicine Name :", m["name"])
-    print("Brand         :", m["brand"])
-    print("Stock         :", m["stock"], "tablets")
-    print("Price/Tablet  : Rs.", m["price_tablet"])
-    print("Price/Strip   : Rs.", m["price_strip"])
-    print("Tablets/Strip :", m["tablets_per_strip"])
-    print("-------------------------")
+# It runs the code if the file is directly run
+if __name__ == "__main__":
+    run_app()
